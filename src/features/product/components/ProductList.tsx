@@ -1,5 +1,6 @@
 import axiosClient from '@/apis/axiois.client';
 import productApi from '@/apis/productApi';
+import Toast from '@/components/Toast';
 import { Button } from '@mui/material';
 import { useEffect } from 'react';
 
@@ -16,6 +17,7 @@ function ProductList() {
             <Button color='success' variant='contained'>
                 Hello world
             </Button>
+            <Toast />
         </div>
     );
 }

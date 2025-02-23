@@ -18,6 +18,10 @@ import {
 import TemplateFrame from './TemplateFrame';
 import { Link } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { IFieldsInput } from '../interfaces/AuthInterface';
+import { schema } from '../schema/AuthSchema';
+import { IToastProps } from '@/components/interfaces/ToastInterface';
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -50,14 +54,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
     })
 }));
 
-interface IFieldsInput {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-}
-
-export default function SignUp() {
+export default function SignUp({ handleClick }: IToastProps) {
     const [mode, setMode] = React.useState<PaletteMode>('light');
     const defaultTheme = createTheme({ palette: { mode } });
 
@@ -65,7 +62,7 @@ export default function SignUp() {
         register,
         handleSubmit,
         formState: { errors }
-    } = useForm<IFieldsInput>();
+    } = useForm<IFieldsInput>({ resolver: yupResolver(schema) });
 
     React.useEffect(() => {
         const savedMode = localStorage.getItem(
@@ -83,6 +80,7 @@ export default function SignUp() {
 
     const onSubmit: SubmitHandler<IFieldsInput> = (data) => {
         console.log('check data', data);
+        handleClick();
     };
     console.log('check errors', errors);
     return (
@@ -132,10 +130,7 @@ export default function SignUp() {
                                         placeholder='Jon'
                                         error={Boolean(errors.firstName)}
                                         helperText={errors.firstName?.message}
-                                        {...register('firstName', {
-                                            required:
-                                                'Please enter your first name'
-                                        })}
+                                        {...register('firstName')}
                                     />
                                 </FormControl>
                                 <FormControl>
@@ -149,10 +144,7 @@ export default function SignUp() {
                                         placeholder='Snow'
                                         error={Boolean(errors.lastName)}
                                         helperText={errors.lastName?.message}
-                                        {...register('lastName', {
-                                            required:
-                                                'Please enter your last name'
-                                        })}
+                                        {...register('lastName')}
                                     />
                                 </FormControl>
                                 <FormControl>
@@ -183,10 +175,7 @@ export default function SignUp() {
                                         variant='outlined'
                                         error={Boolean(errors.password)}
                                         helperText={errors.password?.message}
-                                        {...register('password', {
-                                            required:
-                                                'Please enter your password '
-                                        })}
+                                        {...register('password')}
                                     />
                                 </FormControl>
 
