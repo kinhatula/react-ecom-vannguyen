@@ -16,11 +16,7 @@ import { Provider } from 'react-redux';
 import { store } from '@/redux/store';
 
 //tanstack query
-import {
-    useQueryClient,
-    QueryClientProvider,
-    QueryClient
-} from '@tanstack/react-query';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const router = createBrowserRouter([

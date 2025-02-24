@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+import { IError } from '../../backend-ecommerce/src/globals/middlewares/error.middleware';
 
 interface IAuthPayload {
     email: string;
@@ -14,4 +15,10 @@ interface IUserData {
     lastName: string;
     avatar: string;
     role: string;
+}
+
+interface IErrorResponse {
+    message: string;
+    status: string;
+    statusCode: number;
 }
