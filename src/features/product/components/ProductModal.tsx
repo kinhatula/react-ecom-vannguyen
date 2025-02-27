@@ -1,8 +1,8 @@
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { useState } from 'react';
 import {
     FormControl,
     Grid2,
@@ -14,10 +14,11 @@ import {
     TextField
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import useCategoriesQuery from '@/features/category/hooks/useCategoryQuery';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { productCreateSchema } from '../schema/ProductSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { productCreateSchema } from '../schema/ProductSchema';
+import useProductCreate from '../hooks/useProductCreate';
+import useCategoriesQuery from '@/features/category/hooks/useCategoryQuery';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -43,57 +44,85 @@ const style = {
     p: 4
 };
 
-interface IInputFiels {
+interface IInputFields {
     name: string;
     longDescription: string;
     shortDescription: string;
-    main_image: string;
+    main_image: File;
     quantity: number;
     price: number;
     categoryId: number;
 }
 
 export default function ProductModal() {
-    const { data, isLoading, error } = useCategoriesQuery();
+    const { data } = useCategoriesQuery();
 
     const {
         register,
         handleSubmit,
         setValue,
+        setError,
+        reset,
         formState: { errors }
-    } = useForm<IInputFiels>({
+    } = useForm<IInputFields>({
         resolver: yupResolver(productCreateSchema)
     });
 
     const categories = data.data;
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-    //imgage
+    const handleClose = () => {
+        setOpen(false);
+        reset();
+    };
+    const productCreateMutation = useProductCreate(handleClose);
 
-    const [selectedImage, setSelectedImage] = useState<string | null>('');
+    //   Image
+    const [selectedImage, setSelectedImage] = React.useState<string | null>('');
 
-    //selected
+    //   Select
     const handleChange = (event: SelectChangeEvent) => {
         setValue('categoryId', parseInt(event.target.value));
+        setError('categoryId', {
+            message: undefined
+        });
     };
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+    const handleImagePreview = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!event.target.files) {
             setSelectedImage(null);
             return;
         }
-        const objectUrl = URL.createObjectURL(event.target.files[0]);
 
-        console.log(objectUrl);
+        const objectUrl = URL.createObjectURL(event.target.files[0]); // blob
+
         setSelectedImage(objectUrl);
-        setValue('main_image', objectUrl);
+        setValue('main_image', event.target.files[0]);
+        setError('main_image', {
+            message: undefined
+        });
     };
 
-    const onSubmit: SubmitHandler<IInputFiels> = (data) => console.log(data);
+    const onSubmit: SubmitHandler<IInputFields> = (data) => {
+        console.log(data);
+        const formData = new FormData();
+
+        formData.append('name', data.name);
+        formData.append('longDescription', data.longDescription);
+        formData.append('shortDescription', data.shortDescription);
+        formData.append('quantity', data.quantity.toString());
+        formData.append('price', data.price.toString());
+        formData.append('categoryId', data.categoryId.toString());
+        formData.append('main_image', data.main_image);
+
+        productCreateMutation.mutate(formData);
+    };
+
+    console.log('errors, ', errors);
 
     return (
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '10px' }}>
             <Button variant='contained' onClick={handleOpen}>
                 Add Product
             </Button>
@@ -105,7 +134,7 @@ export default function ProductModal() {
             >
                 <Box
                     sx={style}
-                    component='form'
+                    component={'form'}
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <Typography
@@ -116,10 +145,11 @@ export default function ProductModal() {
                     >
                         Product
                     </Typography>
+
                     <Grid2 container columnSpacing={2}>
                         <Grid2 size={6}>
                             <TextField
-                                label='name'
+                                label='Name'
                                 variant='outlined'
                                 fullWidth
                                 sx={{ marginBottom: 2 }}
@@ -128,7 +158,6 @@ export default function ProductModal() {
                                 {...register('name')}
                             />
                         </Grid2>
-
                         <Grid2 size={6}>
                             <TextField
                                 label='Long Description'
@@ -140,6 +169,9 @@ export default function ProductModal() {
                                 {...register('longDescription')}
                             />
                         </Grid2>
+                    </Grid2>
+
+                    <Grid2 container columnSpacing={2}>
                         <Grid2 size={6}>
                             <TextField
                                 label='Short Description'
@@ -153,7 +185,7 @@ export default function ProductModal() {
                         </Grid2>
                         <Grid2 size={6}>
                             <TextField
-                                label='quantity'
+                                label='Quantity'
                                 variant='outlined'
                                 fullWidth
                                 sx={{ marginBottom: 2 }}
@@ -162,9 +194,12 @@ export default function ProductModal() {
                                 {...register('quantity')}
                             />
                         </Grid2>
+                    </Grid2>
+
+                    <Grid2 container columnSpacing={2}>
                         <Grid2 size={6}>
                             <TextField
-                                label='price'
+                                label='Price'
                                 variant='outlined'
                                 fullWidth
                                 sx={{ marginBottom: 2 }}
@@ -180,16 +215,20 @@ export default function ProductModal() {
                                 </InputLabel>
                                 <Select
                                     labelId='demo-simple-select-label'
-                                    id='demo-simple-select'
                                     label='Category'
                                     defaultValue=''
                                     onChange={handleChange}
                                 >
-                                    {categories.map((item: ICategory) => (
-                                        <MenuItem key={item.id} value={item.id}>
-                                            {item.name}
-                                        </MenuItem>
-                                    ))}
+                                    {categories.map((item: ICategory) => {
+                                        return (
+                                            <MenuItem
+                                                key={item.id}
+                                                value={item.id}
+                                            >
+                                                {item.name}
+                                            </MenuItem>
+                                        );
+                                    })}
                                 </Select>
                                 {errors.categoryId ? (
                                     <Typography color='error'>
@@ -199,6 +238,7 @@ export default function ProductModal() {
                             </FormControl>
                         </Grid2>
                     </Grid2>
+
                     <Button
                         component='label'
                         role={undefined}
@@ -211,7 +251,7 @@ export default function ProductModal() {
                         Upload files
                         <VisuallyHiddenInput
                             type='file'
-                            onChange={handleImageChange}
+                            onChange={handleImagePreview}
                             multiple
                         />
                     </Button>
@@ -220,24 +260,18 @@ export default function ProductModal() {
                             {errors.main_image?.message}
                         </Typography>
                     ) : null}
+
                     <div>
+                        {' '}
                         {selectedImage ? (
                             <img
                                 src={selectedImage}
-                                style={{
-                                    width: 150,
-                                    height: 150,
-                                    marginBottom: 10
-                                }}
+                                style={{ width: '150px', height: '150px' }}
                             />
-                        ) : null}
+                        ) : null}{' '}
                     </div>
-                    <Button
-                        type='submit'
-                        variant='contained'
-                        fullWidth
-                        sx={{ marginTop: 2 }}
-                    >
+
+                    <Button type='submit' variant='contained' fullWidth>
                         Submit
                     </Button>
                 </Box>

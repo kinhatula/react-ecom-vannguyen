@@ -7,7 +7,7 @@ export const productCreateSchema = yup
         shortDescription: yup.string().required(),
         price: yup.number().positive().integer().required(),
         quantity: yup.number().positive().integer().required(),
-        main_image: yup.string().required(),
+        main_image: yup.mixed<File>().required(),
         categoryId: yup.number().positive().integer().required()
     })
     .required();
