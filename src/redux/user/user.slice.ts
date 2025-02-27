@@ -26,10 +26,20 @@ export const userSlice = createSlice({
             state.user.avatar = action.payload.avatar;
             state.user.role = action.payload.role;
             state.isAuthenticated = true;
+        },
+        clearUser: (state) => {
+            state.user = {
+                email: '',
+                firstName: '',
+                lastName: '',
+                avatar: '',
+                role: 'USER'
+            };
+            state.isAuthenticated = false;
         }
     }
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser,clearUser } = userSlice.actions;
 
 export default userSlice.reducer;

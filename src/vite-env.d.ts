@@ -1,6 +1,9 @@
 /// <reference types="vite/client" />
-import { IError } from '../../backend-ecommerce/src/globals/middlewares/error.middleware';
 
+interface ILoginPayload {
+    email: string;
+    password: string;
+}
 interface IAuthPayload {
     email: string;
     password: string;
@@ -21,4 +24,34 @@ interface IErrorResponse {
     message: string;
     status: string;
     statusCode: number;
+}
+// common Response
+interface IApiResponse<T> {
+    message: string;
+    data: T;
+}
+
+//category
+interface ICategory {
+    id: number;
+    name: string;
+    icon: string;
+    status: Boolean;
+}
+
+interface ICategoryPayload {
+    name: string;
+    icon: string;
+}
+
+//product
+interface IProduct {
+    id: number;
+    name: string;
+    shortDescription: string;
+    price: number;
+    quantity: number;
+    main_image: string;
+    categoryId: number;
+    shopId: number;
 }

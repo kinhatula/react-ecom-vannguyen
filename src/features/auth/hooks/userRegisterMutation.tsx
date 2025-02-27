@@ -2,7 +2,6 @@ import authApi from '@/apis/authApi';
 import { useAppDispatch } from '@/redux/hook';
 import { toast } from '@/redux/toast/toast.action';
 import { setUser } from '@/redux/user/user.slice';
-import { IAuthPayload, IErrorResponse } from '@/vite-env';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';

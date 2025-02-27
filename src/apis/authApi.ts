@@ -5,9 +5,17 @@ const authApi = {
         const url = 'auth/register';
         return axiosClient.post(url, data);
     },
+    login(data: ILoginPayload) {
+        const url = 'auth/login';
+        return axiosClient.post(url, data);
+    },
     getMe() {
         const url = 'users/me';
         return axiosClient.get<unknown, IUserData>(url);
+    },
+    logout() {
+        const url = 'auth/logout';
+        return axiosClient.post(url);
     }
 };
 

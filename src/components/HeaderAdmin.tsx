@@ -58,7 +58,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     }
 }));
 
-export default function Header() {
+export default function HeaderAdmin() {
     //react query
     const logoutMutation = userLogoutMutation();
 
@@ -173,7 +173,7 @@ export default function Header() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position='static'>
+            <AppBar position='fixed'>
                 <Toolbar>
                     <IconButton
                         size='large'
@@ -249,6 +249,7 @@ export default function Header() {
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
+            <div style={{ marginTop: '64px' }}></div>
         </Box>
     );
 }

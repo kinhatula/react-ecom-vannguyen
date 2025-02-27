@@ -23,7 +23,6 @@ import { IFieldsInput } from '../interfaces/AuthInterface';
 import { schema } from '../schema/AuthSchema';
 
 import userRegisterMutation from '../hooks/userRegisterMutation';
-import { IAuthPayload } from '@/vite-env';
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',

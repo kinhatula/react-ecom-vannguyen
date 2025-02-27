@@ -4,7 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 function useGetMeQuery() {
     return useQuery({
         queryKey: ['me'],
-        queryFn: () => authApi.getMe()
+        queryFn: () => authApi.getMe(),
+        retry: 1
     });
 }
 

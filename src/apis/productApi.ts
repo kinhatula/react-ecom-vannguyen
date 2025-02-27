@@ -3,7 +3,7 @@ import axiosClient from './axiois.client';
 const productApi = {
     getAll: () => {
         const url = '/products';
-        return axiosClient.get(url);
+        return axiosClient.get<unknown, IApiResponse<IProduct[]>>(url);
     },
     create: () => {
         const url = '/products';

@@ -7,8 +7,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 // components
 import UserRoutes from '@/routes/user.routes.tsx';
 import ProductList from '@/features/product/components/ProductList.tsx';
-import SignUpPage from '@/features/auth/pages/SignUpPage.tsx';
-import SignInPage from './features/auth/pages/SignInPage ';
+
 import Toast from './components/Toast';
 
 //redux
@@ -18,6 +17,12 @@ import { store } from '@/redux/store';
 //tanstack query
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import Dashboard from '@/components/Dashboard';
+import AdminRoutes from '@/routes/admin.routes';
+import CategoryAdminPage from '@/features/category/pages/CategoryAdminPage';
+import SignUpPage from './features/auth/pages/SignUpPage';
+import SignInPage from './features/auth/pages/SignInPage ';
+import ProductAdminPage from './features/product/pages/ProductAdminPage';
 
 const router = createBrowserRouter([
     {
@@ -31,6 +36,24 @@ const router = createBrowserRouter([
             {
                 path: 'profile',
                 element: <div>Profiles</div>
+            }
+        ]
+    },
+    {
+        path: '/admin',
+        element: <AdminRoutes />,
+        children: [
+            {
+                index: true,
+                element: <Dashboard />
+            },
+            {
+                path: 'category',
+                element: <CategoryAdminPage />
+            },
+            {
+                path: 'product',
+                element: <ProductAdminPage />
             }
         ]
     },

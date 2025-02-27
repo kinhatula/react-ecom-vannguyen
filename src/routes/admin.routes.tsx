@@ -1,9 +1,10 @@
 import { Outlet } from 'react-router-dom';
-import Footer from '@components/Footer';
-import Header from '@components/Header';
-import useAuthenticate from '@/hooks/useAuthenticate';
 
-function UserRoutes() {
+import useAuthenticate from '@/hooks/useAuthenticate';
+import HeaderAdmin from '@/components/HeaderAdmin';
+import SideBar from '@/components/Sidebar';
+
+function AdminRoutes() {
     const { isLoading, error } = useAuthenticate();
 
     if (isLoading) {
@@ -15,11 +16,11 @@ function UserRoutes() {
 
     return (
         <div>
-            <Header />
+            <HeaderAdmin />
+            <SideBar />
             <Outlet />
-            <Footer />
         </div>
     );
 }
 
-export default UserRoutes;
+export default AdminRoutes;
