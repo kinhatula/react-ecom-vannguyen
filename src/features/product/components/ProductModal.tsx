@@ -19,6 +19,7 @@ import { productCreateSchema } from '../schema/ProductSchema';
 import useProductCreate from '../hooks/useProductCreate';
 import useCategoriesQuery from '@/features/category/hooks/useCategoryQuery';
 import { useEffect, useState } from 'react';
+import useProductUpdate from '../hooks/useProductUpdate';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -88,9 +89,10 @@ export default function ProductModal({
         setSelectedProduct(undefined);
     };
     const productCreateMutation = useProductCreate(handleClose);
-
+    const productUpdateMutation = useProductUpdate(handleClose);
     //   Image
     const [selectedImage, setSelectedImage] = useState<string | null>('');
+    const [selectedImageFile, setSelectedImageFile] = useState<File>();
 
     //   Select
     const handleChange = (event: SelectChangeEvent) => {
@@ -109,6 +111,7 @@ export default function ProductModal({
         const objectUrl = URL.createObjectURL(event.target.files[0]); // blob
 
         setSelectedImage(objectUrl);
+        setSelectedImageFile(event.target.files[0]);
         setValue('main_image', event.target.files[0]);
         setError('main_image', {
             message: undefined
@@ -122,6 +125,9 @@ export default function ProductModal({
             setValue('price', selectedProduct.price);
             setValue('quantity', selectedProduct.quantity);
             setValue('categoryId', selectedProduct.categoryId);
+            if (selectedImageFile) {
+                setValue('main_image', selectedImageFile);
+            }
         }
     }, [selectedProduct, setValue]);
     console.log('check selectedProduct', selectedProduct);
@@ -137,6 +143,15 @@ export default function ProductModal({
         formData.append('price', data.price.toString());
         formData.append('categoryId', data.categoryId.toString());
         formData.append('main_image', data.main_image);
+
+        if (selectedProduct) {
+            productUpdateMutation.mutate({
+                id: selectedProduct.id,
+                product: formData
+            });
+        } else {
+            productCreateMutation.mutate(formData);
+        }
 
         productCreateMutation.mutate(formData);
     };
