@@ -1,17 +1,24 @@
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef, GridDeleteIcon } from '@mui/x-data-grid';
-import useProductQuery from '../hooks/useProductQuery';
+import {
+    DataGrid,
+    GridColDef,
+    GridDeleteIcon,
+    GridToolbar
+} from '@mui/x-data-grid';
 import useCategoriesQuery from '@/features/category/hooks/useCategoryQuery';
 import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import useProductsQuery from '../hooks/useProductsQuery';
 interface IProductListAdminProps {
     setSelectedProduct: (product: IProduct) => void;
     handOpenConfirmModal: () => void;
+    handleOpenAddOrUpdateModal: () => void;
 }
 
 export default function ProductListAdmin({
     setSelectedProduct,
-    handOpenConfirmModal
+    handOpenConfirmModal,
+    handleOpenAddOrUpdateModal
 }: IProductListAdminProps) {
     const columns: GridColDef<IProduct>[] = [
         { field: 'id', headerName: 'ID', width: 60 },
@@ -39,7 +46,18 @@ export default function ProductListAdmin({
             headerName: 'Price',
             type: 'number',
             width: 110,
-            editable: true
+            editable: true,
+            renderCell(params) {
+                const price = params.value;
+                return (
+                    <span>
+                        {price.toLocaleString('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                        })}
+                    </span>
+                );
+            }
         },
         {
             field: 'main_image',
@@ -75,20 +93,26 @@ export default function ProductListAdmin({
             sortable: false,
             width: 80
         },
+
         {
             field: 'action',
             headerName: 'Action',
             sortable: false,
             width: 200,
             renderCell(params) {
+                const product = params.row;
+
                 const handleDelete = () => {
-                    const product = params.row;
                     setSelectedProduct(product);
                     handOpenConfirmModal();
                 };
+                const handleEdit = () => {
+                    setSelectedProduct(product);
+                    handleOpenAddOrUpdateModal();
+                };
                 return (
                     <>
-                        <IconButton>
+                        <IconButton onClick={handleEdit}>
                             <EditIcon color='warning' />
                         </IconButton>
                         <IconButton onClick={handleDelete}>
@@ -99,16 +123,17 @@ export default function ProductListAdmin({
             }
         }
     ];
-    const { data, isLoading, error } = useProductQuery();
+    const { data, isLoading, error } = useProductsQuery();
     const { data: categoriesData } = useCategoriesQuery();
     const products = data.data;
-    const getCategoryName = (categotyId: number) => {
+    const getCategoryName = (categoryId: number) => {
         const categories = categoriesData.data;
-        return categories.find((cat) => cat.id === categotyId);
+        return categories.find((cat) => cat.id === categoryId);
     };
 
     if (isLoading) return <h1>Loading...</h1>;
     if (error) return <h1>Error...</h1>;
+
     return (
         <Box sx={{ height: 400, width: '100%' }}>
             <DataGrid
@@ -121,9 +146,15 @@ export default function ProductListAdmin({
                         }
                     }
                 }}
-                pageSizeOptions={[5]}
+                pageSizeOptions={[5, 10, 15]}
                 checkboxSelection
                 disableRowSelectionOnClick
+                slots={{ toolbar: GridToolbar }}
+                slotProps={{
+                    toolbar: {
+                        showQuickFilter: true
+                    }
+                }}
             />
         </Box>
     );

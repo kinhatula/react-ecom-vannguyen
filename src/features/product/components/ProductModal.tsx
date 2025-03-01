@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -19,6 +18,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { productCreateSchema } from '../schema/ProductSchema';
 import useProductCreate from '../hooks/useProductCreate';
 import useCategoriesQuery from '@/features/category/hooks/useCategoryQuery';
+import { useEffect, useState } from 'react';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -53,8 +53,18 @@ interface IInputFields {
     price: number;
     categoryId: number;
 }
-
-export default function ProductModal() {
+interface IProductModalProps {
+    selectedProduct: IProduct | undefined;
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    setSelectedProduct: (product: IProduct | undefined) => void;
+}
+export default function ProductModal({
+    open,
+    setOpen,
+    selectedProduct,
+    setSelectedProduct
+}: IProductModalProps) {
     const { data } = useCategoriesQuery();
 
     const {
@@ -70,16 +80,17 @@ export default function ProductModal() {
 
     const categories = data.data;
 
-    const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
         reset();
+        setSelectedImage(null);
+        setSelectedProduct(undefined);
     };
     const productCreateMutation = useProductCreate(handleClose);
 
     //   Image
-    const [selectedImage, setSelectedImage] = React.useState<string | null>('');
+    const [selectedImage, setSelectedImage] = useState<string | null>('');
 
     //   Select
     const handleChange = (event: SelectChangeEvent) => {
@@ -103,6 +114,17 @@ export default function ProductModal() {
             message: undefined
         });
     };
+    useEffect(() => {
+        if (selectedProduct) {
+            setValue('name', selectedProduct.name);
+            setValue('longDescription', selectedProduct.longDescription);
+            setValue('shortDescription', selectedProduct.shortDescription);
+            setValue('price', selectedProduct.price);
+            setValue('quantity', selectedProduct.quantity);
+            setValue('categoryId', selectedProduct.categoryId);
+        }
+    }, [selectedProduct, setValue]);
+    console.log('check selectedProduct', selectedProduct);
 
     const onSubmit: SubmitHandler<IInputFields> = (data) => {
         console.log(data);
@@ -216,7 +238,11 @@ export default function ProductModal() {
                                 <Select
                                     labelId='demo-simple-select-label'
                                     label='Category'
-                                    defaultValue=''
+                                    defaultValue={
+                                        selectedProduct
+                                            ? selectedProduct.categoryId.toString()
+                                            : ''
+                                    }
                                     onChange={handleChange}
                                 >
                                     {categories.map((item: ICategory) => {
@@ -262,10 +288,19 @@ export default function ProductModal() {
                     ) : null}
 
                     <div>
-                        {' '}
                         {selectedImage ? (
                             <img
                                 src={selectedImage}
+                                style={{ width: '150px', height: '150px' }}
+                            />
+                        ) : null}{' '}
+                        {!selectedImage && selectedProduct ? (
+                            <img
+                                src={`${
+                                    import.meta.env.VITE_BACKEND_URL
+                                }/images/products/${
+                                    selectedProduct.main_image
+                                }`}
                                 style={{ width: '150px', height: '150px' }}
                             />
                         ) : null}{' '}

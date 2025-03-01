@@ -1,11 +1,12 @@
 import productApi from '@/apis/productApi';
 import { useQuery } from '@tanstack/react-query';
 
-function useProductQuery() {
+function useProductsQuery() {
     const initialState: IApiResponse<IProduct[]> = {
         message: '',
         data: []
     };
+
     const {
         data = initialState,
         isLoading,
@@ -14,7 +15,8 @@ function useProductQuery() {
         queryKey: ['products'],
         queryFn: productApi.getAll
     });
+
     return { data, isLoading, error };
 }
 
-export default useProductQuery;
+export default useProductsQuery;

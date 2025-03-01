@@ -23,6 +23,7 @@ import CategoryAdminPage from '@/features/category/pages/CategoryAdminPage';
 import SignUpPage from './features/auth/pages/SignUpPage';
 import SignInPage from './features/auth/pages/SignInPage ';
 import ProductAdminPage from './features/product/pages/ProductAdminPage';
+import GalleriesAdminPage from './features/product/pages/GalleriesAdminPage';
 
 const router = createBrowserRouter([
     {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
             {
                 path: 'product',
                 element: <ProductAdminPage />
+            },
+            {
+                path: 'product/:productId/images',
+                element: <GalleriesAdminPage />
             }
         ]
     },

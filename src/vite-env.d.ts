@@ -49,9 +49,18 @@ interface IProduct {
     id: number;
     name: string;
     shortDescription: string;
+    longDescription: string;
     price: number;
     quantity: number;
     main_image: string;
     categoryId: number;
     shopId: number;
+    productImages: IGallery[];
+}
+
+// Galleries
+interface IGallery {
+    id: number;
+    image: string;
+    productId: number;
 }
