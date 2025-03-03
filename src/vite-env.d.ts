@@ -28,6 +28,7 @@ interface IErrorResponse {
 // common Response
 interface IApiResponse<T> {
     message: string;
+    totalCount?: number;
     data: T;
 }
 

@@ -1,36 +1,61 @@
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridDeleteIcon } from '@mui/x-data-grid';
 import useProductQuery from '../hooks/useProductQuery ';
-
-const columns: GridColDef<IGallery>[] = [
-    { field: 'id', headerName: 'ID', width: 150 },
-    {
-        field: 'image',
-        headerName: 'Image',
-        width: 150,
-        editable: false,
-        flex: 1,
-        renderCell: (params) => {
-            return (
-                <img
-                    src={`${import.meta.env.VITE_BACKEND_URL}/images/products/${
-                        params.value
-                    }`}
-                    width={50}
-                    height={50}
-                />
-            );
-        }
-    }
-];
+import { IconButton } from '@mui/material';
+import useGalleryDelete from '../hooks/useGalleryDelete ';
 
 interface IGalleriesDataGridProps {
-    productId: string;
+    productId: number;
 }
 export default function GalleriesDataGrid({
     productId
 }: IGalleriesDataGridProps) {
-    const { data } = useProductQuery(parseInt(productId));
+    const imageDeleteMutation = useGalleryDelete(productId);
+
+    const columns: GridColDef<IGallery>[] = [
+        { field: 'id', headerName: 'ID', width: 150 },
+        {
+            field: 'image',
+            headerName: 'Image',
+            width: 150,
+            editable: false,
+            flex: 1,
+            renderCell: (params) => {
+                return (
+                    <img
+                        src={`${
+                            import.meta.env.VITE_BACKEND_URL
+                        }/images/products/${params.value}`}
+                        width={50}
+                        height={50}
+                    />
+                );
+            }
+        },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 250,
+            editable: false,
+            flex: 1,
+            renderCell: (params) => {
+                const imageId = params.id as number;
+                const handleDelete = () => {
+                    console.log('delete imageId', imageId);
+                    imageDeleteMutation.mutate({
+                        productId,
+                        imageId
+                    });
+                };
+                return (
+                    <IconButton onClick={handleDelete}>
+                        <GridDeleteIcon color='error' />
+                    </IconButton>
+                );
+            }
+        }
+    ];
+    const { data } = useProductQuery(productId);
     const galleries = data.data.productImages;
 
     return (
@@ -41,7 +66,7 @@ export default function GalleriesDataGrid({
                 initialState={{
                     pagination: {
                         paginationModel: {
-                            pageSize: 5
+                            pageSize: 20
                         }
                     }
                 }}

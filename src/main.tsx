@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 // components
 import UserRoutes from '@/routes/user.routes.tsx';
-import ProductList from '@/features/product/components/ProductList.tsx';
+import ProductList from '@/features/product/components/ProductContainer';
 
 import Toast from './components/Toast';
 
@@ -24,12 +24,17 @@ import SignUpPage from './features/auth/pages/SignUpPage';
 import SignInPage from './features/auth/pages/SignInPage ';
 import ProductAdminPage from './features/product/pages/ProductAdminPage';
 import GalleriesAdminPage from './features/product/pages/GalleriesAdminPage';
+import ProductPage from './features/product/pages/ProductPage';
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <UserRoutes />,
         children: [
+            {
+                index: true,
+                element: <ProductPage />
+            },
             {
                 path: 'products',
                 element: <ProductList />

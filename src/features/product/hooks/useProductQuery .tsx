@@ -22,7 +22,7 @@ function useProductQuery(id: number) {
         isLoading,
         error
     } = useQuery({
-        queryKey: ['product', id],
+        queryKey: ['products', id],
         queryFn: () => productApi.get(id)
     });
     return { data, isLoading, error };

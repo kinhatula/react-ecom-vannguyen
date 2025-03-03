@@ -17,7 +17,7 @@ function UserRoutes() {
         <div>
             <Header />
             <Outlet />
-            <Footer />
+            {/* <Footer /> */}
         </div>
     );
 }

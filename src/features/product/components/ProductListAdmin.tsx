@@ -5,10 +5,13 @@ import {
     GridDeleteIcon,
     GridToolbar
 } from '@mui/x-data-grid';
+import useProductQuery from '../hooks/useProductsQuery';
 import useCategoriesQuery from '@/features/category/hooks/useCategoryQuery';
 import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import useProductsQuery from '../hooks/useProductsQuery';
+import EditAttributesIcon from '@mui/icons-material/EditAttributes';
+import { useNavigate } from 'react-router-dom';
+
 interface IProductListAdminProps {
     setSelectedProduct: (product: IProduct) => void;
     handOpenConfirmModal: () => void;
@@ -20,6 +23,8 @@ export default function ProductListAdmin({
     handOpenConfirmModal,
     handleOpenAddOrUpdateModal
 }: IProductListAdminProps) {
+    const navigate = useNavigate();
+
     const columns: GridColDef<IProduct>[] = [
         { field: 'id', headerName: 'ID', width: 60 },
         {
@@ -110,11 +115,19 @@ export default function ProductListAdmin({
                     setSelectedProduct(product);
                     handleOpenAddOrUpdateModal();
                 };
+                const handleGallery = () => {
+                    navigate(`/admin/product/${product.id}/images`);
+                };
                 return (
                     <>
+                        <IconButton onClick={handleGallery}>
+                            <EditAttributesIcon color='warning' />
+                        </IconButton>
+
                         <IconButton onClick={handleEdit}>
                             <EditIcon color='warning' />
                         </IconButton>
+
                         <IconButton onClick={handleDelete}>
                             <GridDeleteIcon color='error' />
                         </IconButton>
@@ -123,7 +136,7 @@ export default function ProductListAdmin({
             }
         }
     ];
-    const { data, isLoading, error } = useProductsQuery();
+    const { data, isLoading, error } = useProductQuery();
     const { data: categoriesData } = useCategoriesQuery();
     const products = data.data;
     const getCategoryName = (categoryId: number) => {

@@ -92,7 +92,7 @@ export default function ProductModal({
     const productUpdateMutation = useProductUpdate(handleClose);
     //   Image
     const [selectedImage, setSelectedImage] = useState<string | null>('');
-    const [selectedImageFile, setSelectedImageFile] = useState<File>();
+    // const [selectedImageFile, setSelectedImageFile] = useState<File>();
 
     //   Select
     const handleChange = (event: SelectChangeEvent) => {
@@ -111,7 +111,7 @@ export default function ProductModal({
         const objectUrl = URL.createObjectURL(event.target.files[0]); // blob
 
         setSelectedImage(objectUrl);
-        setSelectedImageFile(event.target.files[0]);
+        // setSelectedImageFile(event.target.files[1]);
         setValue('main_image', event.target.files[0]);
         setError('main_image', {
             message: undefined
@@ -125,8 +125,19 @@ export default function ProductModal({
             setValue('price', selectedProduct.price);
             setValue('quantity', selectedProduct.quantity);
             setValue('categoryId', selectedProduct.categoryId);
-            if (selectedImageFile) {
-                setValue('main_image', selectedImageFile);
+            if (selectedProduct.main_image) {
+                fetch(
+                    `${import.meta.env.VITE_BACKEND_URL}/images/products/${
+                        selectedProduct.main_image
+                    }`
+                )
+                    .then((res) => res.blob())
+                    .then((blob) => {
+                        const file = new File([blob], 'main_image.jpg', {
+                            type: blob.type
+                        });
+                        setValue('main_image', file);
+                    });
             }
         }
     }, [selectedProduct, setValue]);
@@ -152,8 +163,6 @@ export default function ProductModal({
         } else {
             productCreateMutation.mutate(formData);
         }
-
-        productCreateMutation.mutate(formData);
     };
 
     console.log('errors, ', errors);
@@ -180,7 +189,8 @@ export default function ProductModal({
                         component='h2'
                         sx={{ marginBottom: 2 }}
                     >
-                        Product
+                        {selectedProduct ? 'Update' : 'Create'} Product :
+                        {selectedProduct?.id}
                     </Typography>
 
                     <Grid2 container columnSpacing={2}>
