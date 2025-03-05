@@ -1,18 +1,35 @@
 import React from 'react';
 import ProductCard from './ProductCard';
-import { Box, Grid2 as Grid, Pagination } from '@mui/material';
-import { PAGE_SIZE } from '@/contants/product';
+import { Box, Grid2 as Grid, Pagination, Typography } from '@mui/material';
+import { PAGE_SIZE, PARAM_TYPE } from '@/contants/product';
 import useProductPaginationQuery from '../hooks/useProductPaginationQuery';
 import { SetURLSearchParams } from 'react-router-dom';
 
 interface IProductListProps {
+    searchParams: URLSearchParams;
     setSearchParams: SetURLSearchParams;
     page: number;
     setPage: (page: number) => void;
+    currentFilterValue: number;
+    currentCriteria: PARAM_TYPE;
+    search: string;
 }
 
-function ProductList({ setSearchParams, page, setPage }: IProductListProps) {
-    const { data } = useProductPaginationQuery(page);
+function ProductList({
+    searchParams,
+    setSearchParams,
+    page,
+    setPage,
+    currentCriteria,
+    currentFilterValue,
+    search
+}: IProductListProps) {
+    const { data } = useProductPaginationQuery(
+        page,
+        currentCriteria,
+        currentFilterValue,
+        search
+    );
 
     const products = data.data;
     const totalCount = data.totalCount || 0; //7 page_size: 5
@@ -23,7 +40,11 @@ function ProductList({ setSearchParams, page, setPage }: IProductListProps) {
         value: number
     ) => {
         setPage(value);
-        setSearchParams({ page: value.toString() });
+        searchParams.forEach((value, key) => {
+            searchParams.set(key, value);
+        });
+        searchParams.set('page', value.toString());
+        setSearchParams(searchParams);
     };
 
     return (
@@ -37,6 +58,9 @@ function ProductList({ setSearchParams, page, setPage }: IProductListProps) {
                             </Grid>
                         );
                     })}
+                    {products.length === 0 && (
+                        <Typography>No found products</Typography>
+                    )}
                 </Grid>
                 <Pagination
                     sx={{

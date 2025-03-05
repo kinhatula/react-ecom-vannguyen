@@ -25,6 +25,7 @@ import SignInPage from './features/auth/pages/SignInPage ';
 import ProductAdminPage from './features/product/pages/ProductAdminPage';
 import GalleriesAdminPage from './features/product/pages/GalleriesAdminPage';
 import ProductPage from './features/product/pages/ProductPage';
+import ProductDetailPage from './features/product/pages/ProductDetailPage';
 
 const router = createBrowserRouter([
     {
@@ -36,8 +37,8 @@ const router = createBrowserRouter([
                 element: <ProductPage />
             },
             {
-                path: 'products',
-                element: <ProductList />
+                path: 'products/:id',
+                element: <ProductDetailPage />
             },
             {
                 path: 'profile',

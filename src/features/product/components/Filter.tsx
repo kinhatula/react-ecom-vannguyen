@@ -1,3 +1,4 @@
+import { PARAM_TYPE } from '@/contants/product';
 import PriceSlider from './PriceSlider';
 import {
     Box,
@@ -17,7 +18,7 @@ interface IFillerProp {
     searchParams: URLSearchParams;
     setSearchParams: SetURLSearchParams;
     criteria: string;
-    setCriteria: (criteria: string) => void;
+    setCriteria: (criteria: PARAM_TYPE) => void;
     filterValue: number;
     setFilterValue: (value: number) => void;
 }
@@ -30,7 +31,7 @@ function Filter({
     setFilterValue
 }: IFillerProp) {
     const handleChange = (event: SelectChangeEvent) => {
-        setCriteria(event.target.value as string);
+        setCriteria(event.target.value as PARAM_TYPE);
         searchParams.set('criteria', event.target.value);
         setSearchParams(searchParams);
     };
