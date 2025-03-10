@@ -12,9 +12,29 @@ import MinimizeIcon from '@mui/icons-material/Minimize';
 
 interface IProductInfo {
     product: IProduct;
+    quantity: number;
+    setQuantity: (quantity: number) => void;
+    handleAddToCart: () => void;
 }
 
-function ProductInfo({ product }: IProductInfo) {
+function ProductInfo({
+    product,
+    quantity,
+    setQuantity,
+    handleAddToCart
+}: IProductInfo) {
+    const handleDeCrement = () => {
+        if (quantity <= 1) {
+            setQuantity(1);
+            return;
+        }
+        setQuantity(quantity - 1);
+    };
+
+    const handleInCrement = () => {
+        setQuantity(quantity + 1);
+    };
+
     return (
         <Box padding={5}>
             <Typography
@@ -37,15 +57,23 @@ function ProductInfo({ product }: IProductInfo) {
             </Typography>
             <p style={{ fontSize: '20px' }}>{product.longDescription}</p>
             <Stack direction={'row'} sx={{ mb: 3 }}>
-                <IconButton>
+                <IconButton onClick={handleDeCrement}>
                     <MinimizeIcon />
                 </IconButton>
-                <TextField type='text' sx={{ width: 100 }}></TextField>
-                <IconButton>
+                <TextField
+                    type='text'
+                    sx={{ width: 100 }}
+                    value={quantity}
+                ></TextField>
+                <IconButton onClick={handleInCrement}>
                     <AddIcon />
                 </IconButton>
             </Stack>
-            <Button variant='contained' color='warning'>
+            <Button
+                variant='contained'
+                color='warning'
+                onClick={handleAddToCart}
+            >
                 Add to cart
             </Button>
         </Box>

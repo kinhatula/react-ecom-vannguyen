@@ -15,6 +15,7 @@ function useAuthenticate() {
         if (data && !user.isAuthenticated) {
             dispatch(
                 setUser({
+                    id: data.id,
                     firstName: data.firstName,
                     lastName: data.lastName,
                     email: data.email,

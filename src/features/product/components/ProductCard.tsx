@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface IProductCardProps {
     product: IProduct;
@@ -13,18 +13,18 @@ interface IProductCardProps {
 export default function ProductCard({ product }: IProductCardProps) {
     const navigate = useNavigate();
     return (
-        <Card
-            sx={{ maxWidth: 345 }}
-        >
+        <Card sx={{ maxWidth: 345 }}>
             <CardHeader title={product.name} subheader={`${product.price}$`} />
-            <CardMedia
-                component='img'
-                height='194'
-                image={`${import.meta.env.VITE_BACKEND_URL}/images/products/${
-                    product.main_image
-                }`}
-                alt='Paella dish'
-            />
+            <Link to={`/products/${product.id}`}>
+                <CardMedia
+                    component='img'
+                    height='100%'
+                    image={`${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/images/products/${product.main_image}`}
+                    alt='Paella dish'
+                />
+            </Link>
             <CardContent>
                 <Typography variant='body2' sx={{ color: 'text.secondary' }}>
                     {product.shortDescription}

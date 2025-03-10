@@ -10,7 +10,7 @@ function userLoginMutation() {
 
     const mutation = useMutation({
         mutationFn: authApi.login,
-        onSuccess: async (data) => {
+        onSuccess: async () => {
             const myInFo = await authApi.getMe();
             dispatch(
                 setUser({
@@ -22,7 +22,7 @@ function userLoginMutation() {
                 })
             );
             if (myInFo.role === 'ADMIN') {
-                navigate('/admin');
+                navigate('/');
             }
             if (myInFo.role === 'USER') {
                 navigate('/');

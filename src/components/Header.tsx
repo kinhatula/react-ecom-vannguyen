@@ -1,5 +1,3 @@
-import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,28 +6,32 @@ import Typography from '@mui/material/Typography';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-
-import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import userLogoutMutation from '@/features/auth/hooks/userLogoutMutation ';
-import { Link } from 'react-router-dom';
-
-
+import { Link, useNavigate } from 'react-router-dom';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { useState } from 'react';
+import useCartQuery from '@/features/cart/hooks/useCartQuery';
+import InventoryIcon from '@mui/icons-material/Inventory';
 export default function HeaderAdmin() {
     //react query
     const logoutMutation = userLogoutMutation();
 
+    const { data } = useCartQuery();
+    const cartItems = data.data.cartItems;
+
     //state
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-        React.useState<null | HTMLElement>(null);
+        useState<null | HTMLElement>(null);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    // react router dom
+    const navigate = useNavigate();
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -42,6 +44,7 @@ export default function HeaderAdmin() {
     const handleMenuClose = () => {
         setAnchorEl(null);
         handleMobileMenuClose();
+        navigate('/profile');
     };
 
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -98,8 +101,8 @@ export default function HeaderAdmin() {
                     aria-label='show 4 new mails'
                     color='inherit'
                 >
-                    <Badge badgeContent={4} color='error'>
-                        <MailIcon />
+                    <Badge badgeContent={cartItems.length} color='error'>
+                        <AddShoppingCartIcon />
                     </Badge>
                 </IconButton>
                 <p>Messages</p>
@@ -135,31 +138,18 @@ export default function HeaderAdmin() {
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position='fixed'>
                 <Toolbar>
-                    <IconButton
-                        size='large'
-                        edge='start'
-                        color='inherit'
-                        aria-label='open drawer'
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
                     <Typography
                         variant='h6'
                         noWrap
-                        component='div'
-                        sx={{ display: { xs: 'none', sm: 'block' } }}
+                        component={Link}
+                        to={'/'}
+                        sx={{
+                            display: { xs: 'none', sm: 'block' },
+                            color: '#fff',
+                            textDecoration: 'none'
+                        }}
                     >
-                        <Link
-                            to='/'
-                            style={{
-                                textDecoration: 'none',
-                                color: '#fff',
-                                fontWeight: 'bold'
-                            }}
-                        >
-                            Mui
-                        </Link>
+                        Mui
                     </Typography>
 
                     <Box sx={{ flexGrow: 1 }} />
@@ -168,20 +158,26 @@ export default function HeaderAdmin() {
                             size='large'
                             aria-label='show 4 new mails'
                             color='inherit'
+                            onClick={() => navigate('/carts')}
                         >
-                            <Badge badgeContent={4} color='error'>
-                                <MailIcon />
+                            <Badge
+                                badgeContent={cartItems.length}
+                                color='error'
+                            >
+                                <AddShoppingCartIcon />
                             </Badge>
                         </IconButton>
                         <IconButton
                             size='large'
-                            aria-label='show 17 new notifications'
+                            aria-label='show 4 new mails'
                             color='inherit'
+                            onClick={() => navigate('/orders')}
                         >
-                            <Badge badgeContent={17} color='error'>
-                                <NotificationsIcon />
+                            <Badge badgeContent={1} color='error'>
+                                <InventoryIcon />
                             </Badge>
                         </IconButton>
+
                         <IconButton
                             size='large'
                             edge='end'

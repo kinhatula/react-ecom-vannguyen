@@ -6,6 +6,7 @@ interface IUserPayload {
 }
 const initialState: IUserPayload = {
     user: {
+        id: 0,
         email: '',
         firstName: '',
         lastName: '',
@@ -20,6 +21,7 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, action) => {
+            state.user.id = action.payload.id;
             state.user.firstName = action.payload.firstName;
             state.user.lastName = action.payload.lastName;
             state.user.email = action.payload.email;
@@ -27,8 +29,13 @@ export const userSlice = createSlice({
             state.user.role = action.payload.role;
             state.isAuthenticated = true;
         },
+        changeUser: (state, action) => {
+            state.user.firstName = action.payload.firstName;
+            state.user.lastName = action.payload.lastName;
+        },
         clearUser: (state) => {
             state.user = {
+                id: 0,
                 email: '',
                 firstName: '',
                 lastName: '',
@@ -40,6 +47,6 @@ export const userSlice = createSlice({
     }
 });
 
-export const { setUser,clearUser } = userSlice.actions;
+export const { setUser, clearUser,changeUser } = userSlice.actions;
 
 export default userSlice.reducer;

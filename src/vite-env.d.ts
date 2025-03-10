@@ -13,6 +13,7 @@ interface IAuthPayload {
 }
 
 interface IUserData {
+    id: number;
     email: string;
     firstName: string;
     lastName: string;
@@ -64,4 +65,84 @@ interface IGallery {
     id: number;
     image: string;
     productId: number;
+}
+
+//cart
+
+interface IAddToCartPayload {
+    productId: number;
+    quantity: number;
+}
+interface ICartItem {
+    id: number;
+    productId: number;
+    cartId: number;
+    price: number;
+    quantity: number;
+    productName: string;
+    productImage: string;
+}
+interface ICart {
+    id: number;
+    userId: number;
+    totalPrice: number;
+    cartItems: ICartItem[];
+}
+//user
+
+interface IUserPayload {
+    firstName: string;
+    lastName: string;
+}
+interface IUserResponse {
+    email: string;
+    firstName: string;
+    lastName: string;
+    avatar: string;
+}
+interface IUserPasswordPayload {
+    currentPassword: string;
+    newPassword: string;
+    confirmNewPassword: string;
+}
+//address
+interface IAddressPayload {
+    street: string;
+    province: string;
+    country: string;
+    postalCode: number;
+}
+
+interface IAddress {
+    id: number;
+    street: string;
+    province: string;
+    country: string;
+    postalCode: number;
+    userId: number;
+}
+//order
+interface IOrderPayload {
+    addressId: number;
+}
+
+interface IOrderItem {
+    id: number;
+    productId: number;
+    orderId: number;
+    variant: string;
+    price: number;
+    quantity: number;
+    product:IProduct
+
+}
+interface IOrder {
+    id: number;
+    userId: number;
+    address: string;
+    couponCode: string;
+    totalPrice: number;
+    totalQuantity: number;
+    status: string;
+    orderItems: IOrderItem[];
 }

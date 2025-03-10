@@ -14,8 +14,7 @@ function userRegisterMutation() {
         mutationFn: (auhData: IAuthPayload) => {
             return authApi.register(auhData);
         },
-        onSuccess: async (data) => {
-            dispatch(toast.success('Register successfully!'));
+        onSuccess: async () => {
             const myInfo = await authApi.getMe();
             dispatch(
                 setUser({
@@ -26,8 +25,8 @@ function userRegisterMutation() {
                     role: myInfo.role
                 })
             );
-            console.log('response onSuccess myInfo', myInfo);
-            navigate('/products');
+            dispatch(toast.success('Register successfully!'));
+            navigate('/');
         },
         onError: (error: AxiosError<unknown, IErrorResponse>) => {
             dispatch(toast.error(error.message));
