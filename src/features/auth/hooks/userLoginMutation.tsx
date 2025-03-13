@@ -22,7 +22,7 @@ function userLoginMutation() {
                 })
             );
             if (myInFo.role === 'ADMIN') {
-                navigate('/');
+                navigate('/admin');
             }
             if (myInFo.role === 'USER') {
                 navigate('/');
