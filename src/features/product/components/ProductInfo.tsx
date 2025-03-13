@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import MinimizeIcon from '@mui/icons-material/Minimize';
+import useProductReviewQuery from '../hooks/useProductReviewQuery';
 
 interface IProductInfo {
     product: IProduct;
@@ -31,6 +32,9 @@ function ProductInfo({
         setQuantity(quantity - 1);
     };
 
+    const { data } = useProductReviewQuery(product.id);
+    const reviewStar = data.data;
+
     const handleInCrement = () => {
         setQuantity(quantity + 1);
     };
@@ -45,7 +49,7 @@ function ProductInfo({
             </Typography>
             <Rating
                 name='read-only'
-                value={4}
+                value={reviewStar}
                 readOnly
                 sx={{ marginBottom: 4 }}
             />

@@ -11,6 +11,7 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import CategoryIcon from '@mui/icons-material/Category';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import DiscountIcon from '@mui/icons-material/Discount';
 import { useNavigate } from 'react-router-dom';
 
 const sidebarList = [
@@ -31,9 +32,9 @@ const sidebarList = [
     },
 
     {
-        name: 'User',
-        icon: <AccountCircleIcon />,
-        link: '/admin/user'
+        name: 'Coupon',
+        icon: <DiscountIcon />,
+        link: '/admin/coupon'
     }
 ];
 export default function SideBar() {

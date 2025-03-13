@@ -123,9 +123,12 @@ interface IAddress {
 }
 //order
 interface IOrderPayload {
+    couponCode: string;
     addressId: number;
 }
-
+interface IOrDerStatusPayload {
+    status: string;
+}
 interface IOrderItem {
     id: number;
     productId: number;
@@ -133,8 +136,7 @@ interface IOrderItem {
     variant: string;
     price: number;
     quantity: number;
-    product:IProduct
-
+    product: IProduct;
 }
 interface IOrder {
     id: number;
@@ -145,4 +147,18 @@ interface IOrder {
     totalQuantity: number;
     status: string;
     orderItems: IOrderItem[];
+}
+//review
+interface IReviewPayload {
+    productId: number;
+    rating: number;
+    comment: string;
+}
+
+//coupon
+type ICouponType = 'PERCENT' | 'VALUE';
+interface ICoupon {
+    code: string;
+    discountPrice: number;
+    discountType: string;
 }

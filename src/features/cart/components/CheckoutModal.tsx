@@ -9,11 +9,13 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    SelectChangeEvent
+    SelectChangeEvent,
+    TextField
 } from '@mui/material';
 import { useAppSelector } from '@/redux/hook';
 import useProfileAddressQuery from '@/features/user/hooks/useProfileAddressQuery';
 import useCheckout from '../hooks/useCheckout';
+import { Link } from 'react-router-dom';
 
 const style = {
     position: 'absolute',
@@ -38,6 +40,7 @@ export default function CheckoutModal({
 }: ICheckoutModalProps) {
     //react
     const [addressId, setAddressId] = useState('');
+    const [couponCode, setCouponCode] = useState('');
     // redux
     const { user } = useAppSelector((state) => state.user);
     // react query
@@ -58,7 +61,7 @@ export default function CheckoutModal({
 
     const handleCheckoutConfirm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        checkoutMutation.mutate({ addressId: parseInt(addressId) });
+        checkoutMutation.mutate({couponCode, addressId: parseInt(addressId) });
     };
 
     return (
@@ -77,35 +80,58 @@ export default function CheckoutModal({
                     >
                         Please choose address
                     </Typography>
-                    <FormControl
+                    <TextField
+                        label='Coupon Code'
+                        placeholder='Comment'
                         fullWidth
-                        component={'form'}
-                        onSubmit={handleCheckoutConfirm}
-                    >
-                        <InputLabel id='demo-simple-select-label'>
-                            Address
-                        </InputLabel>
-                        <Select
-                            sx={{ mb: 2 }}
-                            labelId='demo-simple-select-label'
-                            id='demo-simple-select'
-                            value={addressId}
-                            label='Address'
-                            onChange={handleChange}
-                            defaultValue={'sdsdsdsd'}
+                        sx={{ mb: 2 }}
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                    />
+
+                    {addresses.length ? (
+                        <FormControl
+                            fullWidth
+                            component={'form'}
+                            onSubmit={handleCheckoutConfirm}
                         >
-                            {addresses?.map((address) => (
-                                <MenuItem key={address.id} value={address.id}>
-                                    {address.street} - {address.country}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <Button variant='contained' type='submit'>
-                            Checkout
-                        </Button>
-                    </FormControl>
+                            <InputLabel id='demo-simple-select-label'>
+                                Address
+                            </InputLabel>
+                            <Select
+                                sx={{ mb: 2 }}
+                                labelId='demo-simple-select-label'
+                                id='demo-simple-select'
+                                value={addressId}
+                                label='Address'
+                                onChange={handleChange}
+                                defaultValue={'sdsdsdsd'}
+                            >
+                                {addresses?.map((address) => (
+                                    <MenuItem
+                                        key={address.id}
+                                        value={address.id}
+                                    >
+                                        {address.street} - {address.country}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            <Button variant='contained' type='submit'>
+                                Checkout
+                            </Button>
+                        </FormControl>
+                    ) : (
+                        <Link
+                            to={'/profile'}
+                            style={{ textDecoration: 'none', fontSize: '30px' }}
+                        >
+                            Add address
+                        </Link>
+                    )}
                 </Box>
             </Modal>
         </div>
     );
+}
+{
 }

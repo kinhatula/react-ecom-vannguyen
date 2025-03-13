@@ -8,7 +8,7 @@ import useProfileAddressCreate from '../hooks/useProfileAddressCreate';
 import ProfileAddressTable from './ProfileAddressTable';
 import { useAppSelector } from '@/redux/hook';
 
-interface IInPutFields {
+export interface IInPutFields {
     street: string;
     province: string;
     country: string;
@@ -19,6 +19,7 @@ export default function ProfileAddress() {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors }
     } = useForm<IInPutFields>({
         resolver: yupResolver(profileAddressSchema)
@@ -26,7 +27,7 @@ export default function ProfileAddress() {
 
     const { user } = useAppSelector((state) => state.user);
 
-    const addressCreateMutation = useProfileAddressCreate(user.id);
+    const addressCreateMutation = useProfileAddressCreate(user.id,reset);
 
     const onSubmit: SubmitHandler<IInPutFields> = (data) => {
         console.log('check data', data);

@@ -2,12 +2,12 @@ import productApi from '@/apis/productApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 function useProductCreate(handleClose: () => void) {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
     return useMutation({
         mutationFn: productApi.create,
         onSuccess: (data) => {
             console.log('create product success', data);
-            handleClose()
+            handleClose();
             queryClient.invalidateQueries({ queryKey: ['products'] });
         },
         onError: (error) => {

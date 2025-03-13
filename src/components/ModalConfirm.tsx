@@ -15,30 +15,32 @@ const style = {
     boxShadow: 24,
     p: 4
 };
-interface IModalConfirmProps<T> {
+interface IModalConfirmProps<T, IdType> {
     openConfirmModal: boolean;
     handleCloseConfirmModal: () => void;
     selectedItem: T | undefined;
     useDelete: (
         cb: () => void
-    ) => UseMutationResult<IApiResponse<undefined>, Error, number, unknown>;
+    ) => UseMutationResult<IApiResponse<undefined>, Error, IdType, unknown>;
     itemName: string;
     getItemName: () => string;
+    selectedItemId: IdType;
 }
 
-export default function ModalConfirm<T extends { id: number }>({
+export default function ModalConfirm<T, IdType>({
     openConfirmModal,
     handleCloseConfirmModal,
     useDelete,
     selectedItem,
     getItemName,
-    itemName
-}: IModalConfirmProps<T>) {
+    itemName,
+    selectedItemId
+}: IModalConfirmProps<T, IdType>) {
     const deleteMutation = useDelete(handleCloseConfirmModal);
     const handleSubmit = () => {
         console.log('delete', selectedItem);
         if (selectedItem) {
-            deleteMutation.mutate(selectedItem.id);
+            deleteMutation.mutate(selectedItemId);
         }
     };
 
@@ -59,7 +61,7 @@ export default function ModalConfirm<T extends { id: number }>({
                             marginBottom: '10px'
                         }}
                     >
-                        Are you sure delele {itemName}: {getItemName()}
+                        Are you sure delete {itemName}: {getItemName()}
                     </Typography>
                     <Button
                         variant='contained'

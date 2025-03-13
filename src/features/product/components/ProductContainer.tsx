@@ -26,7 +26,7 @@ function ProductContainer() {
         searchParams.set('value', filterValue.toString());
         searchParams.set('name', search);
         setSearchParams(searchParams);
-    }, [searchParams, setSearchParams, page, criteria, filterValue,search]);
+    }, [searchParams, setSearchParams, page, criteria, filterValue, search]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);

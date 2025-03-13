@@ -50,7 +50,8 @@ const productApi = {
     delete(id: number) {
         const url = `products/${id}`;
         return axiosClient.delete<unknown, IApiResponse<undefined>>(url);
-    }
+    },
+    
 };
 
 export default productApi;

@@ -39,6 +39,7 @@ function ProductAdminPage() {
                 getItemName={() =>
                     selectedProduct ? selectedProduct?.name : ''
                 }
+                selectedItemId={selectedProduct? selectedProduct.id:0}
             />
           
         </div>

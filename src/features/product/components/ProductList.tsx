@@ -73,6 +73,7 @@ function ProductList({
                     color='primary'
                     onChange={handleChangePage}
                 />
+                <Typography variant='h3'> List danh mục</Typography>
             </Box>
         </>
     );

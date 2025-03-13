@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useEffect } from 'react';
 import { clearUser, setUser } from '@/redux/user/user.slice';
@@ -10,6 +10,7 @@ function useAuthenticate() {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         if (data && !user.isAuthenticated) {
@@ -34,10 +35,10 @@ function useAuthenticate() {
 
     useEffect(() => {
         // console.log('check admin', data);
-        if (data && user && user.isAuthenticated && user.user.role === 'USER') {
+        if (location.pathname === '/admin' && data && user && user.isAuthenticated && user.user.role === 'USER') {
             navigate('/');
         }
-    }, [data, user, navigate]);
+    }, [data, user, navigate,location]);
 
     useEffect(() => {
         if (error) {

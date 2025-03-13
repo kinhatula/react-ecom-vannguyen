@@ -1,11 +1,11 @@
 import { Grid2 as Grid } from '@mui/material';
-
 import { useParams } from 'react-router-dom';
 import useProductQuery from '../hooks/useProductQuery ';
 import ProductCarousel from './ProductCarousel';
 import ProductInfo from './ProductInfo';
 import { useState } from 'react';
 import useAddToCart from '@/features/cart/hooks/useAddToCart';
+import ProductReview from './ProductReview';
 function ProductDetailContainer() {
     //router dom
     const { id } = useParams();
@@ -27,19 +27,24 @@ function ProductDetailContainer() {
     };
 
     return (
-        <Grid container spacing={2}>
-            <Grid size={4}>
-                <ProductCarousel product={product} />
+        <>
+            <Grid container spacing={2}>
+                <Grid size={4}>
+                    <ProductCarousel product={product} />
+                </Grid>
+                <Grid size={4}>
+                    <ProductInfo
+                        product={product}
+                        quantity={quantity}
+                        setQuantity={setQuantity}
+                        handleAddToCart={handleAddToCart}
+                    />
+                </Grid>
+                <Grid size={4}>
+                    <ProductReview productId={productId} />
+                </Grid>
             </Grid>
-            <Grid size={8}>
-                <ProductInfo
-                    product={product}
-                    quantity={quantity}
-                    setQuantity={setQuantity}
-                    handleAddToCart={handleAddToCart}
-                />
-            </Grid>
-        </Grid>
+        </>
     );
 }
 

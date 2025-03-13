@@ -249,7 +249,7 @@ export default function HeaderAdmin() {
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
-            <div style={{ marginTop: '64px' }}></div>
+            <div style={{ marginBottom: '80px' }}></div>
         </Box>
     );
 }
